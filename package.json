@@ -1,0 +1,9 @@
+{
+  "standard": {
+    "global": [
+      "Meteor",
+      "Session",
+      "Template"
+    ]
+  }
+}
