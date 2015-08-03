@@ -1,8 +1,11 @@
+Meteor.subscribe('incomes')
+Meteor.subscribe('expenses')
+
 Incomes = new Mongo.Collection('incomes')
 Expenses = new Mongo.Collection('expenses')
 
 function isEnter (e) {
-  return e.keyCode === 13;
+  return e.keyCode === 13
 }
 
 Template.main.helpers({
