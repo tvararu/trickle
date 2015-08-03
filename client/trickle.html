@@ -3,12 +3,27 @@
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
-
-  {{> hello}}
+  {{> loginButtons}}
+  {{#if currentUser}}
+    {{> main}}
+  {{/if}}
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="main">
+  <h1>Available balance</h1>
+  <p>{{balance}}</p>
+  <h1>Income</h1>
+  <input id="input-income" type="number">
+  <ul>
+    {{#each incomes}}
+      <li>+{{amount}}</li>
+    {{/each}}
+  </ul>
+  <h1>Expenses</h1>
+  <input id="input-expense" type="number">
+  <ul>
+    {{#each expenses}}
+      <li>-{{amount}}</li>
+    {{/each}}
+  </ul>
 </template>
