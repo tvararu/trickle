@@ -14,20 +14,20 @@ Template.main.helpers({
   balance: function () {
     income = Incomes.find().fetch()
       .reduce(function (total, curr) {
-        return total + parseFloat(curr.amount)
+        return total + curr.amount
       }, 0)
     expenses = Expenses.find().fetch()
       .reduce(function (total, curr) {
-        return total - parseFloat(curr.amount)
+        return total - curr.amount
       }, 0)
-    return income + expenses
+    return (income + expenses).toFixed(2)
   }
 })
 
 Template.main.events({
   'keypress #input-income': function (e) {
     if (isEnter(e)) {
-      var amount = e.currentTarget.value
+      var amount = Math.abs(parseFloat(e.currentTarget.value))
       if (amount) {
         Incomes.insert({ userId: Meteor.user()._id, amount: amount })
       }
@@ -36,7 +36,7 @@ Template.main.events({
   },
   'keypress #input-expense': function (e) {
     if (isEnter(e)) {
-      var amount = e.currentTarget.value
+      var amount = Math.abs(parseFloat(e.currentTarget.value))
       if (amount) {
         Expenses.insert({ userId: Meteor.user()._id, amount: amount })
       }
