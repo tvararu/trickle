@@ -1,9 +1,7 @@
 {
   "standard": {
     "global": [
-      "Meteor",
-      "Session",
-      "Template"
+      "Meteor", "Session", "Template", "Mongo"
     ]
   }
 }

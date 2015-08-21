@@ -1,8 +1,8 @@
 Meteor.subscribe('incomes')
 Meteor.subscribe('expenses')
 
-Incomes = new Mongo.Collection('incomes')
-Expenses = new Mongo.Collection('expenses')
+var Incomes = new Mongo.Collection('incomes')
+var Expenses = new Mongo.Collection('expenses')
 
 function isEnter (e) {
   return e.keyCode === 13
@@ -12,11 +12,11 @@ Template.main.helpers({
   incomes: function () { return Incomes.find() },
   expenses: function () { return Expenses.find() },
   balance: function () {
-    income = Incomes.find().fetch()
+    var income = Incomes.find().fetch()
       .reduce(function (total, curr) {
         return total + curr.amount
       }, 0)
-    expenses = Expenses.find().fetch()
+    var expenses = Expenses.find().fetch()
       .reduce(function (total, curr) {
         return total - curr.amount
       }, 0)
