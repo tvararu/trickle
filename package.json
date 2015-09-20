@@ -6,8 +6,12 @@
     "clean": "rimraf dist",
     "build:webpack": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
-    "start": "node devServer.js",
+    "dev": "node devServer.js",
     "lint": "standard"
+  },
+  "engines" : {
+    "node" : ">=4.1.0",
+    "npm": ">=2.14.0"
   },
   "repository": {
     "type": "git",

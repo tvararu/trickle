@@ -1,23 +1,25 @@
-var path = require('path')
-var express = require('express')
-var webpack = require('webpack')
-var config = require('./webpack.config.dev')
+const path = require('path')
+const express = require('express')
+const webpack = require('webpack')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const webpackHotMiddleware = require('webpack-hot-middleware')
+const config = require('./webpack.config.dev')
 
-var app = express()
-var compiler = webpack(config)
+const app = express()
+const compiler = webpack(config)
 
-app.use(require('webpack-dev-middleware')(compiler, {
+app.use(webpackDevMiddleware(compiler, {
   noInfo: true,
   publicPath: config.output.publicPath
 }))
 
-app.use(require('webpack-hot-middleware')(compiler))
+app.use(webpackHotMiddleware(compiler))
 
-app.get('*', function (req, res) {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'))
 })
 
-app.listen(3000, 'localhost', function (err) {
+app.listen(3000, 'localhost', (err) => {
   if (err) {
     console.log(err)
     return
