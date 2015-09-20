@@ -5,7 +5,9 @@
   "scripts": {
     "clean": "rimraf dist",
     "build:webpack": "NODE_ENV=production webpack --config webpack.config.prod.js",
-    "build": "npm run clean && npm run build:webpack",
+    "build": "npm run clean && npm run build:webpack && node scripts/build.js",
+    "deploy": "npm run build && npm run deploy:surge",
+    "deploy:surge": "surge -p dist -d trickle.surge.sh",
     "dev": "node scripts/dev.js",
     "lint": "standard"
   },
@@ -37,6 +39,7 @@
     "redbox-react": "^1.0.1",
     "rimraf": "^2.4.3",
     "standard": "^5.3.1",
+    "surge": "^0.15.0",
     "webpack": "^1.9.6",
     "webpack-dev-middleware": "^1.2.0",
     "webpack-hot-middleware": "^2.0.0"
