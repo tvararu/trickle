@@ -80,9 +80,9 @@ export default React.createClass({
   },
   renderLogin () {
     if (this.isLoggedIn()) {
-      return <div onClick={ this.logout }>Logout</div>
+      return <button onClick={ this.logout }>Logout</button>
     } else {
-      return <div onClick={ this.login }>Login with Google</div>
+      return <button onClick={ this.login }>Login with Google</button>
     }
   },
   renderApp () {
