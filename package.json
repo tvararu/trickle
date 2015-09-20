@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "firebase": "^2.2.9",
-    "react": "^0.13.0"
+    "react": "^0.13.0",
+    "react-tap-event-plugin": "^0.1.7"
   },
   "standard": {
     "parser": "babel-eslint"
