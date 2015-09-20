@@ -2,7 +2,16 @@ import React from 'react'
 import Firebase from 'firebase'
 
 const ref = new Firebase('https://trickle.firebaseio.com')
-const incomesRef = window.incomesRef = ref.child('incomes')
+const incomesRef = ref.child('incomes')
+const expensesRef = ref.child('expenses')
+
+const createTransaction = (amount, userId) => {
+  return {
+    userId,
+    amount,
+    createdAt: +new Date()
+  }
+}
 
 export default React.createClass({
   displayName: 'App',
@@ -10,17 +19,29 @@ export default React.createClass({
     return {
       authData: ref.getAuth(),
       error: false,
-      incomes: []
+      incomes: [],
+      expenses: []
     }
   },
   componentDidMount () {
     ref.onAuth(this.authDataCallback)
     ref.on('value', (snapshot) => {
-      const incomes = Object.keys(snapshot.val().incomes).map((key) => {
-        const income = snapshot.val().incomes[key]
+      const { incomes, expenses } = snapshot.val()
+      const incomeArray = (incomes) ? Object.keys(incomes).map((key) => {
+        const income = incomes[key]
         return Object.assign(income, { key })
-      })
-      this.setState({ incomes })
+      }) : []
+      const expenseArray = (expenses) ? Object.keys(expenses).map((key) => {
+        const expense = expenses[key]
+        return Object.assign(expense, { key })
+      }) : []
+      const sum = (prev, curr) => prev + curr.amount
+      const balance = incomeArray.reduce(sum, 0) - expenseArray.reduce(sum, 0)
+      console.log(balance)
+      this.setState({
+        incomes: incomeArray,
+        expenses: expenseArray,
+        balance })
     })
   },
   authDataCallback (authData) {
@@ -36,15 +57,19 @@ export default React.createClass({
   logout () {
     ref.unauth()
   },
-  handleKeyUp (e) {
-    const input = React.findDOMNode(this.refs.input)
+  handleInputIncome (e) {
+    const input = React.findDOMNode(this.refs.inputIncome)
     const val = Math.abs(parseFloat(input.value))
     if (e.keyCode === 13 && val) {
-      incomesRef.push({
-        userId: this.state.authData.uid,
-        amount: val,
-        createdAt: +new Date()
-      })
+      incomesRef.push(createTransaction(val, this.state.authData.uid))
+      input.value = ''
+    }
+  },
+  handleInputExpense (e) {
+    const input = React.findDOMNode(this.refs.inputExpense)
+    const val = Math.abs(parseFloat(input.value))
+    if (e.keyCode === 13 && val) {
+      expensesRef.push(createTransaction(val, this.state.authData.uid))
       input.value = ''
     }
   },
@@ -59,16 +84,23 @@ export default React.createClass({
     }
   },
   renderApp () {
-    const { authData, incomes } = this.state
+    const { authData, incomes, expenses, balance } = this.state
     if (this.isLoggedIn()) {
       return <div>
         Hello { authData.google.displayName }.
         <div>
-          <input type='number' ref='input' onKeyUp={ this.handleKeyUp } />
         </div>
-        <h1>Incomes</h1>
+        <h1>Available balance</h1>
+        <div>{ balance }</div>
+        <h1>Income</h1>
+        <input type='number' ref='inputIncome' onKeyUp={ this.handleInputIncome } />
         <ul>
-          { incomes.map(income => <li key={ income.key }>{ income.amount }</li>) }
+          { incomes.map(income => <li key={ income.key }>+{ income.amount }</li>) }
+        </ul>
+        <h1>Expenses</h1>
+        <input type='number' ref='inputExpense' onKeyUp={ this.handleInputExpense } />
+        <ul>
+          { expenses.map(expense => <li key={ expense.key }>-{ expense.amount }</li>) }
         </ul>
       </div>
     } else {
