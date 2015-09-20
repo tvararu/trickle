@@ -12,6 +12,7 @@ module.exports = {
     publicPath: '/static/'
   },
   resolve: {
+    root: path.resolve('./src/'),
     extensions: [
       '',
       '.js',
