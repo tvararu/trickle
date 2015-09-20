@@ -20,12 +20,14 @@ export default React.createClass({
       authData: ref.getAuth(),
       error: false,
       incomes: [],
-      expenses: []
+      expenses: [],
+      balance: 0
     }
   },
   componentDidMount () {
     ref.onAuth(this.authDataCallback)
     ref.on('value', (snapshot) => {
+      if (!snapshot.val()) { return }
       const { incomes, expenses } = snapshot.val()
       const incomeArray = (incomes) ? Object.keys(incomes).map((key) => {
         const income = incomes[key]
@@ -36,12 +38,12 @@ export default React.createClass({
         return Object.assign(expense, { key })
       }) : []
       const sum = (prev, curr) => prev + curr.amount
-      const balance = incomeArray.reduce(sum, 0) - expenseArray.reduce(sum, 0)
-      console.log(balance)
+      const balance = (incomeArray.reduce(sum, 0) - expenseArray.reduce(sum, 0)).toFixed(2)
       this.setState({
         incomes: incomeArray,
         expenses: expenseArray,
-        balance })
+        balance
+      })
     })
   },
   authDataCallback (authData) {
@@ -59,7 +61,7 @@ export default React.createClass({
   },
   handleInputIncome (e) {
     const input = React.findDOMNode(this.refs.inputIncome)
-    const val = Math.abs(parseFloat(input.value))
+    const val = Math.abs(parseFloat(input.value)).toFixed(2)
     if (e.keyCode === 13 && val) {
       incomesRef.push(createTransaction(val, this.state.authData.uid))
       input.value = ''
@@ -67,7 +69,7 @@ export default React.createClass({
   },
   handleInputExpense (e) {
     const input = React.findDOMNode(this.refs.inputExpense)
-    const val = Math.abs(parseFloat(input.value))
+    const val = Math.abs(parseFloat(input.value)).toFixed(2)
     if (e.keyCode === 13 && val) {
       expensesRef.push(createTransaction(val, this.state.authData.uid))
       input.value = ''
