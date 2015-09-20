@@ -9,8 +9,8 @@
     "dev": "node devServer.js",
     "lint": "standard"
   },
-  "engines" : {
-    "node" : ">=4.1.0",
+  "engines": {
+    "node": ">=4.1.0",
     "npm": ">=2.14.0"
   },
   "repository": {
@@ -42,6 +42,7 @@
     "webpack-hot-middleware": "^2.0.0"
   },
   "dependencies": {
+    "firebase": "^2.2.9",
     "react": "^0.13.0"
   },
   "standard": {
