@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import Firebase from 'firebase'
 
 const ref = new Firebase('https://trickle.firebaseio.com')
@@ -13,18 +13,17 @@ const createTransaction = (amount, userId) => {
   }
 }
 
-export default React.createClass({
-  displayName: 'App',
-  getInitialState () {
-    return {
-      authData: ref.getAuth(),
-      error: false,
-      incomes: [],
-      expenses: [],
-      balance: 0
-    }
-  },
-  componentDidMount () {
+export default class App extends Component {
+  static displayName = 'App'
+  state = {
+    authData: ref.getAuth(),
+    error: false,
+    incomes: [],
+    expenses: [],
+    balance: 0
+  }
+  constructor (props) {
+    super(props)
     ref.onAuth(this.authDataCallback)
     ref.on('value', (snapshot) => {
       if (!snapshot.val()) { return }
@@ -45,47 +44,47 @@ export default React.createClass({
         balance
       })
     })
-  },
-  authDataCallback (authData) {
+  }
+  authDataCallback = (authData) => {
     this.setState({ authData })
-  },
-  login () {
+  }
+  login = () => {
     ref.authWithOAuthPopup('google', (error) => {
       if (error) {
         this.setState({ error })
       }
     })
-  },
-  logout () {
+  }
+  logout = () => {
     ref.unauth()
-  },
-  handleInputIncome (e) {
+  }
+  handleInputIncome = (e) => {
     const input = React.findDOMNode(this.refs.inputIncome)
     const val = Math.abs(parseFloat(input.value)).toFixed(2)
     if (e.keyCode === 13 && val) {
       incomesRef.push(createTransaction(val, this.state.authData.uid))
       input.value = ''
     }
-  },
-  handleInputExpense (e) {
+  }
+  handleInputExpense = (e) => {
     const input = React.findDOMNode(this.refs.inputExpense)
     const val = Math.abs(parseFloat(input.value)).toFixed(2)
     if (e.keyCode === 13 && val) {
       expensesRef.push(createTransaction(val, this.state.authData.uid))
       input.value = ''
     }
-  },
-  isLoggedIn () {
+  }
+  isLoggedIn = () => {
     return this.state.authData
-  },
-  renderLogin () {
+  }
+  renderLogin = () => {
     if (this.isLoggedIn()) {
       return <button onClick={ this.logout }>Logout</button>
     } else {
       return <button onClick={ this.login }>Login with Google</button>
     }
-  },
-  renderApp () {
+  }
+  renderApp = () => {
     const { authData, incomes, expenses, balance } = this.state
     if (this.isLoggedIn()) {
       return <div>
@@ -108,11 +107,11 @@ export default React.createClass({
     } else {
       return null
     }
-  },
+  }
   render () {
     return <div>
       { this.renderLogin() }
       { this.renderApp() }
     </div>
   }
-})
+}
