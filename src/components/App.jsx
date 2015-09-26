@@ -36,8 +36,10 @@ export default class App extends Component {
         const expense = expenses[key]
         return Object.assign(expense, { key })
       }) : []
-      const sum = (prev, curr) => prev + curr.amount
-      const balance = (incomeArray.reduce(sum, 0) - expenseArray.reduce(sum, 0)).toFixed(2)
+      const sum = (prev, curr) => prev + (+curr.amount)
+      const reducedIncomes = incomeArray.reduce(sum, 0)
+      const reducedExpenses = expenseArray.reduce(sum, 0)
+      const balance = (reducedIncomes - reducedExpenses).toFixed(2)
       this.setState({
         incomes: incomeArray,
         expenses: expenseArray,
